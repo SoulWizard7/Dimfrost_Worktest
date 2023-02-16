@@ -30,6 +30,12 @@ public:
 	UPROPERTY(EditAnywhere, Category=GameRules)
 	float CamperTriggerDistOffset = 0.f;
 
+	UPROPERTY(EditAnywhere, Category=GameRules)
+	float PlayerWalkSpeed = 600.f;
+
+	UPROPERTY(EditAnywhere, Category=GameRules)
+	float RunnerWalkSpeed = 600.f;
+
 	UPROPERTY()
 	ADimfrost_WorktestCharacter* PlayerRef;
 

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/InputSettings.h"
 
 
@@ -48,6 +49,11 @@ void ADimfrost_WorktestCharacter::BeginPlay()
 void ADimfrost_WorktestCharacter::ResetPlayerPosition()
 {
 	SetActorLocation(SpawnLocation);
+}
+
+void ADimfrost_WorktestCharacter::SetWalkSpeed(float speed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = speed;
 }
 
 //////////////////////////////////////////////////////////////////////////// Input

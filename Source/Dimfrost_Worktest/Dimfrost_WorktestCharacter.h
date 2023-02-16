@@ -44,6 +44,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ResetPlayerPosition();
+
+	UFUNCTION()
+	void SetWalkSpeed(float speed);
 	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

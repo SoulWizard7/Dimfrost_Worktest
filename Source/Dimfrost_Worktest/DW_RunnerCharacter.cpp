@@ -9,6 +9,7 @@
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -38,13 +39,18 @@ void ADW_RunnerCharacter::BeginPlay()
 	}
 }
 
-void ADW_RunnerCharacter::SetBlackBoardValues()
+void ADW_RunnerCharacter::SetWalkSpeed(float speed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = speed;
+}
+
+void ADW_RunnerCharacter::SetBlackBoardValues(FVector PoleLocation)
 {
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
 	if(NavSys)
 	{
 		FVector PoleLoc = FVector::ZeroVector;
-		NavSys->K2_GetRandomLocationInNavigableRadius(GetWorld(), GameManager->GetActorLocation(), PoleLoc, 120.f);
+		NavSys->K2_GetRandomLocationInNavigableRadius(GetWorld(), PoleLocation, PoleLoc, 120.f);
 		BlackBoard->SetValueAsVector("PoleLocation", PoleLoc);
 	}
 	else
@@ -123,7 +129,7 @@ void ADW_RunnerCharacter::Rush()
 {
 	if(CurrentState != ERunnerState::MoveToPole)
 	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Blue, FString::Printf(TEXT("Rush")) , true, FVector2D(1.f));
+		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Blue, FString::Printf(TEXT("Rush")) , true, FVector2D(1.f));
 		ChangeRunnerState(ERunnerState::MoveToPole);
 	}
 }

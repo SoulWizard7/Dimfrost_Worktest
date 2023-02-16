@@ -16,7 +16,7 @@ void UTP_WeaponComponent::BeginPlay()
 	{
 		FActorSpawnParameters ActorSpawnParams;
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		GetWorld()->SpawnActor<ADW_ProjectilePool>(ProjectilePoolClass, FVector::Zero(), FRotator::ZeroRotator, ActorSpawnParams);
+		ProjectilePool = GetWorld()->SpawnActor<ADW_ProjectilePool>(ProjectilePoolClass, FVector::Zero(), FRotator::ZeroRotator, ActorSpawnParams);
 	}
 }
 

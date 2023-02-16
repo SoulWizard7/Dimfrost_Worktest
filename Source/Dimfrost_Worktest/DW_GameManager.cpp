@@ -49,8 +49,8 @@ void ADW_GameManager::Tick(float DeltaTime)
 	if(!bOpportunistRush)
 	{
 		for (int i = 0; i < RunnerList.Num(); ++i)
-		{		
-			float RunnerToPoleDist = FVector::Dist2D(GetActorLocation(), RunnerList[i]->GetActorLocation());
+		{
+			const float RunnerToPoleDist = FVector::Dist2D(GetActorLocation(), RunnerList[i]->GetActorLocation());
 			if(RunnerToPoleDist < DistForOpportunistsToRush)
 			{
 				OpportunistRush();
@@ -60,13 +60,13 @@ void ADW_GameManager::Tick(float DeltaTime)
 }
 
 void ADW_GameManager::StartGame()
-{
+{	
 	RunnersEliminated = 0;
-	FVector polePos = GetActorLocation();
+	FVector PoleLoc = GetActorLocation();
 	for (int i = 0; i < RunnerList.Num(); ++i)
-	{		
-		//RunnerList[i]->SetPoleLocation(polePos);
-		RunnerList[i]->SetBlackBoardValues();
+	{				
+		RunnerList[i]->SetBlackBoardValues(PoleLoc);
+		RunnerList[i]->SetWalkSpeed(RunnerWalkSpeed);
 		
 		if(RunnerList[i]->CurrentType == ERunnerType::Random)
 		{
@@ -74,6 +74,8 @@ void ADW_GameManager::StartGame()
 			RunnerList[i]->ChangeRunnerType(static_cast<ERunnerType>(random));
 		}
 	}
+	PlayerRef->SetWalkSpeed(PlayerWalkSpeed);
+	
 	ResetPlayer();
 	ResetRunners();
 
@@ -138,7 +140,7 @@ void ADW_GameManager::RunnerEliminated()
 	}
 	if(RunnersEliminated >= RunnerList.Num())
 	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 60.f, FColor::Green, FString::Printf(TEXT("YOU WIN!!")) , true, FVector2D(1.f));
+		PlayerWinsRound();
 	}
 }
 

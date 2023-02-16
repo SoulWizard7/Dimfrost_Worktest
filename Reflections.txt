@@ -1,0 +1,31 @@
+
+Instructions.
+
+In editor:
+BP_Rifle has the TP_WeaponComponent which hold all the tweakable parameters from Task 1
+BP_PoleGameManager holds all parameters for the "Game Rules"
+
+
+
+Reflections
+
+Task 1 : Shooting Modifications
+
+I wanted to keep it simple and every tweakable parameter in one place, so I mostly worked in the TP_WeaponComponent and Dimfrost_WorktestProjectile scripts. I also implemented a pooling system for the projectiles, that is how I interpreted the last segment in the text under Task 1. I struggled to figure out how to "reset" the projectile movement component, since it would not launch properly and finally found it as:
+
+(line 57 in Dimfrost_WorktestProjectile.cpp)
+GetProjectileMovement()->SetUpdatedComponent(GetRootComponent());
+
+The task was easy enough, having to just add a few lines of code to change the max angle, launch speed and adding a simple distance check for the max distance. Since the projectiles would bounce and sometimes not reach their max distance, I added a TimeToKill variable to make sure projectiles would properly return to the pool at some point.
+
+
+Task 2 : Dunken
+
+I decided to have a game manager and the pole as one actor, since many behaviours had a base in distance checks, I saw it was proper to use the pole as the base object for the game. I also wanted to keep it simple and not have separate scripts/behaviour trees for the runners, I added enums for the runner types and runner states. I've found that enums have been quite helpful to use with behaviour trees in the past so I decided for it here as well. The structure I setup was perhaps a bit overkill since the behaviours were quite simple, but the structure is very easily expandable from this point on. Both in the behaviour trees and on the runner actors one is able to access the states and types. 
+
+
+
+Brief evaluation of difficult parts
+
+I think the hardest part for this project was setting up and getting components to run properly through C++. These components include behaviour tree, blackboard, AIcontroller. The documentation not being very clear is the main hurdle here. Also the part of using the Navigation functions in C++ are a bit confusing, since there are so many different parts (UNavigationSystem, ANavigationData, UNavigationPath and a variety of querys and results to name a few). I often times spend time on figuring these parts out, but slowly I am understanding the connections, at least a little bit. 
+

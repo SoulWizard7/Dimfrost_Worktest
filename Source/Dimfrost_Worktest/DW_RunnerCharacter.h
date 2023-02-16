@@ -68,9 +68,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;	
 public:
+	UFUNCTION()
+	void SetWalkSpeed(float speed);
 	
 	UFUNCTION()
-	void SetBlackBoardValues();
+	void SetBlackBoardValues(FVector PoleLocation);
 	
 	UFUNCTION()
 	void SetBlackboard();
