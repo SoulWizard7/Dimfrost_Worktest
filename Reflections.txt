@@ -16,16 +16,22 @@ I wanted to keep it simple and every tweakable parameter in one place, so I most
 (line 57 in Dimfrost_WorktestProjectile.cpp)
 GetProjectileMovement()->SetUpdatedComponent(GetRootComponent());
 
-The task was easy enough, having to just add a few lines of code to change the max angle, launch speed and adding a simple distance check for the max distance. Since the projectiles would bounce and sometimes not reach their max distance, I added a TimeToKill variable to make sure projectiles would properly return to the pool at some point.
+The task was easy enough, having to just add a few lines of code to change the max angle, launch speed and adding a simple distance check for the max distance. Since the projectiles would bounce and sometimes not reach their max distance, I added a TimeToKill variable to make sure projectiles would properly return to the pool at some point. Although the shooting looks wonky since the animations are not aligned with the max angle.
 
 
 Task 2 : Dunken
 
-I decided to have a game manager and the pole as one actor, since many behaviours had a base in distance checks, I saw it was proper to use the pole as the base object for the game. I also wanted to keep it simple and not have separate scripts/behaviour trees for the runners, I added enums for the runner types and runner states. I've found that enums have been quite helpful to use with behaviour trees in the past so I decided for it here as well. The structure I setup was perhaps a bit overkill since the behaviours were quite simple, but the structure is very easily expandable from this point on. Both in the behaviour trees and on the runner actors one is able to access the states and types. 
+I decided to have a game manager and the pole as the same actor, since many behaviours had a base in distance checks, I saw it was proper to use the pole as the base object for the game. I also wanted to keep it simple and not have separate scripts/behaviour trees for the runners, I added enums for the runner types and runner states. I've found that enums have been quite helpful to use with behaviour trees in the past so I decided for it here as well. The structure I setup was perhaps a bit overkill since the behaviours were quite simple, but the structure is very easily expandable from this point on. Both in the behaviour trees and on the runner actors one is able to access the states and types. 
+
+I used the perception component at first, but decided to remove it and make my own function. This way it looked more natural when Ninja runners peek the corner only to find the player there. There are many things to consider when it comes to the perception, but I kept it simple with just checking for the player every 0,5 seconds. So far I have not had a lot use for Unreals perception component, I find it weirdly complex and clunky. I'd have to do a more deep dive tho if I am to use it properly in a project.
+
+I was using a few BT Task blueprints as well, but realized that they were obsolete and just integrated them into the code instead.
 
 
 
 Brief evaluation of difficult parts
 
-I think the hardest part for this project was setting up and getting components to run properly through C++. These components include behaviour tree, blackboard, AIcontroller. The documentation not being very clear is the main hurdle here. Also the part of using the Navigation functions in C++ are a bit confusing, since there are so many different parts (UNavigationSystem, ANavigationData, UNavigationPath and a variety of querys and results to name a few). I often times spend time on figuring these parts out, but slowly I am understanding the connections, at least a little bit. 
+I think the hardest part for this project was setting up and getting components to run properly through C++. These components include behaviour tree, blackboard, AIcontroller. The documentation not being very clear is the main hurdle here. Also the part of using the Navigation functions in C++ are a bit confusing, since there are so many different parts (UNavigationSystem, ANavigationData, UNavigationPath and a variety of queries and results to name a few). I have spent some time on figuring these parts out, and slowly I am understanding the connections to some extent.
+
+I just modified the premade templated scripts several times and did not change the names of the scripts. I am actually not sure of all the naming conventions when it comes to Unreal, and hope to get some clarity on that in the future. I used DW (for Dimfrost Worktest) as the identifier when creating scripts in this project.  My plan has been to adapt to the company naming conventions and script outlays. Also I admit to not being the best to properly set the access modifiers (public, private etc) 
 

@@ -87,10 +87,15 @@ void ADW_RunnerCharacter::ActivateRunner()
 
  void ADW_RunnerCharacter::CalculatePathLenght()
 {
+	// This code uses the built-in navigation, finds path to the pole, and measures the distance of the path
+	
 	RunnerPathToPoleDist = 0.f;	
 	FVector EndPos = GameManager->GetActorLocation();
 	UNavigationSystemV1* navSys = UNavigationSystemV1::GetCurrent(GetWorld());
 	UNavigationPath* path = navSys->FindPathToLocationSynchronously(GetWorld(), GetActorLocation(), EndPos);
+
+	// The NavigationSystemV1 as I understand it, is the brain of the navigation in UE. With it we can access the current navmesh and request
+	// a path between two points. This will return a NavigationPath that includes a vector array of the path points.
 
 	for (int i = 0; i < path->PathPoints.Num() - 1; ++i)
 	{
@@ -98,7 +103,15 @@ void ADW_RunnerCharacter::ActivateRunner()
 		RunnerPathToPoleDist += dist;
 	}
 
+	//There are built in functions for calculating the path lenght, but I like to have some oversight to what is happening,
+	// hence we just chech the path length manually with a for loop.
+
 	RunnerPathToPoleDist += GameManager->CamperTriggerDistOffset;
+
+	//In the tick function the values will be compared for triggering the Campers rush. Since the Campers path is calculated, 
+	//but not the players, I decided to just have an tweakable parameter to add to the distance to compensate.
+	//I felt it was too much to constantly calculate players path length in a tick. For a more accurate result
+	//one might consider having the players path be calculated every second or something similar.
 }
 
 void ADW_RunnerCharacter::ChangeRunnerType(ERunnerType NewType)
@@ -128,8 +141,7 @@ void ADW_RunnerCharacter::ChangeRunnerState(ERunnerState NewState)
 void ADW_RunnerCharacter::Rush()
 {
 	if(CurrentState != ERunnerState::MoveToPole)
-	{
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Blue, FString::Printf(TEXT("Rush")) , true, FVector2D(1.f));
+	{		
 		ChangeRunnerState(ERunnerState::MoveToPole);
 	}
 }
@@ -158,11 +170,13 @@ void ADW_RunnerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if(CurrentType == ERunnerType::Camper && CurrentState == ERunnerState::Active)
-	{
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0.f, FColor::Blue, FString::Printf(TEXT("Player to pole dist: %f "), GameManager->PlayerToPoleDist) , true, FVector2D(1.f));
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0.f, FColor::Blue, FString::Printf(TEXT("Runner Path To Pole Dist: %f "), RunnerPathToPoleDist) , true, FVector2D(1.f));
-		
-		if(GameManager->PlayerToPoleDist > RunnerPathToPoleDist)
+	{		
+		float RunnerTimeToPole = RunnerPathToPoleDist / GameManager->RunnerWalkSpeed;
+		float PlayerTimeToPole = GameManager->PlayerToPoleDist / GameManager->PlayerWalkSpeed;
+
+		// Values will be measured in second it takes for characters to move at max speed to the pole
+				
+		if(PlayerTimeToPole > RunnerTimeToPole)
 		{
 			Rush();
 		}
